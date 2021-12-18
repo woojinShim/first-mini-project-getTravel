@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Admin | Get Travel</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Bulma CSS 링크 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+
+    <!--css-->
+
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='cm_style.css') }}" rel="stylesheet">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+
+    <style>
+        body {
+            font-family: 'Jua', sans-serif;
+            min-height: 100vh;
+        }
+
+        .section {
+            padding: 1rem 1.5rem;
+            max-width: 750px;
+            margin: auto;
+        }
+
+        .title {
+            font-weight: 800;
+            font-size: 5rem;
+            font-family: 'Nanum Gothic', sans-serif;
+        }
+
+        .subtitle {
+            font-size: 2rem;
+            font-family: 'Nanum Gothic', sans-serif;
+        }
+
+        .is-sparta {
+            color: #536dfe !important;
+        }
+
+        .button .is-sparta {
+            background-color: #536dfe;
+            border-color: transparent;
+            color: #fff !important;
+        }
+
+        .posing-box {
+            width: 500px;
+            margin-top: 20px;
+        }
+
+        .wrap {
+            width: 800px;
+            margin: auto;
+        }
+
+        .container {
+            padding-left: 50px;
+        }
+
+        .custom-file {
+            margin-bottom: 30px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            bsCustomFileInput.init();
+
+        })
+
+        function posting() {
+            let name = $('#name').val()
+            let address = $('#address').val()
+            let content = $("#content").val()
+
+            //console창에서 해보면 아는거. 모네파일을 첨부하면 모네파일에 대한 정보를 볼 수 있는 코드
+            let file = $('#file')[0].files[0]
+            let form_data = new FormData()
+            // formdata에 실어서 보내야 한다
+            form_data.append("file_give", file)
+            form_data.append("name_give", name)
+            form_data.append("address_give", address)
+            form_data.append("content_give", content)
+
+            $.ajax({
+                type: "POST",
+                url: "/upload",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.href = '/'
+                }
+            });
+        }
+
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = "/login"
+        }
+
+
+    </script>
+</head>
+
+<body>
+<nav class="navbar" role="navigation" style=" margin: 0; padding: 0;">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img class="logo-img" src="../static/logo.png" width="112" height="28">
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="/">
+                Home
+            </a>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link" >
+                    Mypage
+                </a>
+
+                <div class="navbar-dropdown">
+                    <a class="navbar-item" onclick="window.location.href='/mypage'">
+                        My Comment
+                    </a>
+                    <a class="navbar-item" onclick="window.location.href='/mylike'">
+                        My favorite
+                    </a>
+
+                </div>
+            </div>
+            {% if user_info.username == 'admin'%}
+
+            <a class="navbar-item" onclick="javascript:admin();">
+                Admin
+            </a>
+            {% endif %}
+        </div>
+
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a class="button is-light" onclick="sign_out()">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="wrap">
+    <div class="jumbotron jumbotron-fluid">
+
+        <div class="container admin-container">
+
+            <h1>여행지 업로드</h1>
+            <div class="posing-box">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="file">
+                    <label class="custom-file-label" for="file">Choose file</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="name" placeholder="여행지 이름">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="address" placeholder="여행지 주소">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" id="content" rows="3"
+                              placeholder="여행지 소개"></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="posting()">저장하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

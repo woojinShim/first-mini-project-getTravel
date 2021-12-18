@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Detail | Get Travel</title>
+
+    <!-- Bulma CSS 링크 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!--css-->
+    <link href="{{ url_for('static', filename='cm_style.css') }}" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Jua', sans-serif;
+        }
+
+        .section {
+            padding: 1rem 1.5rem;
+            margin: auto;
+            background-color: #f4f4f4;
+        }
+
+        .comment-btn {
+            background-color: #872AE0;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            padding: 8px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-family: 'Jua', sans-serif;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .name {
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+
+        .description {
+            margin-top: 10px;
+            height: 200px;
+            overflow: auto;
+        }
+
+        .description::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .description::-webkit-scrollbar-thumb {
+            background-color: #E0E0E0;
+            border-radius: 10px;
+        }
+
+        .description::-webkit-scrollbar-track {
+            background-color: #F5F5F5;
+            border-radius: 10px;
+        }
+
+        .icon {
+            margin-top: 10px;
+        }
+
+        img {
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .arrange {
+            display: block;
+            margin: auto;
+        }
+
+        .modal-content {
+            width: 600px;
+            max-width: 80%;
+        }
+
+        .left-div {
+            width: 800px;
+            height: 600px;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        .right-div {
+            width: 400px;
+            height: 700px;
+            margin: auto;
+        }
+
+        .last-div {
+            margin: auto;
+        }
+
+
+
+        .bigimg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            //자바스크립트 안이기 때문에 ''로 문자처리해줘야한다
+            get_travel('{{ travel.name }}')
+        })
+
+        function toggle_like(travel_name, type) {
+            console.log(travel_name, type)
+            let $a_like = $(`.last-div a[aria-label='heart']`)
+            console.log($a_like)
+            let $i_like = $a_like.find("i")
+            console.log($i_like)
+            if ($i_like.hasClass("fa-heart")) {
+                $.ajax({
+                    type: "POST",
+                    url: "/update_like",
+                    data: {
+                        travelname_give: travel_name,
+                        type_give: type,
+                        action_give: "unlike"
+                    },
+                    success: function (response) {
+                        console.log("unlike")
+                        $i_like.addClass("fa-heart-o").removeClass("fa-heart")
+                        $a_like.find("span.like-num").text(num2str(response["count"]))
+                    }
+                })
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/update_like",
+                    data: {
+                        travelname_give: travel_name,
+                        type_give: type,
+                        action_give: "like"
+                    },
+                    success: function (response) {
+                        console.log("like")
+                        $i_like.addClass("fa-heart").removeClass("fa-heart-o")
+                        $a_like.find("span.like-num").text(response["count"])
+                    }
+                })
+
+            }
+        }
+
+        function num2str(count) {
+            if (count > 10000) {
+                return parseInt(count / 1000) + "k"
+            }
+            if (count > 500) {
+                return parseInt(count / 100) / 10 + "k"
+            }
+            if (count == 0) {
+                return ""
+            }
+            return count
+        }
+
+        function get_travel(travelname) {
+            $.ajax({
+                type: "GET",
+                url: `/get_travel?travelname_give=${travelname}`,
+                data: {},
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        let travel = response["travel"]
+                        //내가 좋아요 했는지 안했는지 확인
+                        let class_heart = travel['heart_by_me'] ? "fa-heart" : "fa-heart-o"
+                        //하트 숫자
+                        let count_heart = travel['count_heart']
+                        let html_temp = `<div class="container arrange">
+                                            <div class="left-div">
+                                                <img src="../static/${travel['file']}" alt="Placeholder image" class="image bigimg">
+                                            </div>
+                                            <div class="right-div">
+                                                <div>
+                                                    <p class="name">${travel['name']}</p>
+                                                    <p>${travel['address']}</p>
+                                                    <p class="description">${travel['content']}</p>
+                                                </div>
+                                                <div class="last-div">
+                                                    <a class="icon" aria-label="heart" onclick="toggle_like('${travel['name']}', 'heart')">
+                                                        <span class="icon"><i class="fa ${class_heart}" aria-hidden="true"></i></span>
+                                                        <span class="like-num">${num2str(count_heart)}</span>
+                                                    </a>
+                                                    {% if user_info['username'] == 'admin' %}
+                                                        <button class="comment-btn" onclick="window.location.href='/admin-edit?travel_give=${travel['name']}'">수정</button>
+                                                        <button class="comment-btn" onclick="delete_travel('${travel['name']}')">삭제</button>
+                                                    {% endif %}
+                                                    <button class="comment-btn" onclick="window.location.href='/comment/${travel['name']}'">후기 쓰러가기</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`
+                        $(".section").append(html_temp)
+                    }
+                }
+            })
+        }
+        function delete_travel(travel){
+            console.log('삭제 시작')
+            $.ajax({
+                    type: "POST",
+                    url: "/delete-travel",
+                    data: {
+                        travelname_give: travel
+                    },
+                    success: function (response) {
+                        alert(response['msg'])
+                        window.location.href = "/"
+                    }
+                })
+
+        }
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = "/login"
+        }
+    </script>
+</head>
+<body>
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img class="logo-img" src="../static/logo.png" width="112" height="28">
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="/">
+                Home
+            </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                    Mypage
+                </a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item" onclick="window.location.href='/mypage'">
+                        My Comment
+                    </a>
+                    <a class="navbar-item" onclick="window.location.href='/mylike'">
+                        My favorite
+                    </a>
+                </div>
+            </div>
+            {% if user_info.username == 'admin' %}
+                <a class="navbar-item" onclick="window.location.href='/admin'">
+                    Admin
+                </a>
+            {% endif %}
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a class="button is-light" onclick="javascript:sign_out();">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="section">
+
+</body>
+</html>

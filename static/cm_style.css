@@ -1,0 +1,179 @@
+body {
+    font-family: 'Jua', sans-serif;
+    min-height: 100vh;
+}
+
+.test{
+
+}
+
+.logo-img {
+    border-radius: 15px;
+}
+.back_img{
+    width:2000px;
+    height:400px;
+    margin-bottom:70px;
+}
+
+.pic-title {
+    position: relative;
+}
+
+.main-title {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+}
+
+.pic-title span {
+    font-size: 80px;
+    color: #2487A5;
+}
+
+.section {
+    padding: 1rem 1.5rem;
+
+    margin: auto;
+}
+
+.name {
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.title {
+    font-weight: 800;
+    font-size: 5rem;
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
+.subtitle {
+    font-size: 2rem;
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
+.is-sparta {
+    color: #536dfe !important;
+}
+
+.button .is-sparta {
+    background-color: #536dfe;
+    border-color: transparent;
+    color: #fff !important;
+}
+
+.admin-container {
+    padding-left: 50px;
+}
+
+.custom-file {
+    margin-bottom: 30px;
+}
+
+.image {
+    width: 100%;
+}
+
+.posing-box {
+    width: 500px;
+    margin-top: 20px;
+}
+
+
+.card-title {
+    font-size: 14px;
+    text-align:center;
+}
+
+.card-index {
+    font-size: 10px;
+}
+
+.index-card {
+    float: left;
+    margin-right: 20px;
+    margin-bottom: 40px;
+    width: 300px;
+    display:grid;
+    grid-template-rows : 300px;
+    grid-template-columns:300px;
+    border-radius:25px;
+}
+.travel-card{
+    width:300px;
+    height:300px;
+    max-width: 400px;
+    max-height: 400px;
+}
+
+.content {
+    text-align: center;
+    color: #777;
+}
+
+.read-more {
+    font-family: 'Carme', sans-serif;
+    font-family: 'Fraunces', serif;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    font-size: 5px;
+}
+
+
+.description {
+    margin-top: 10px;
+    height: 200px;
+    overflow: auto;
+}
+
+.description::-webkit-scrollbar {
+    width: 10px;
+}
+
+.description::-webkit-scrollbar-thumb {
+    background-color: #E0E0E0;
+    border-radius: 10px;
+}
+
+.description::-webkit-scrollbar-track {
+    background-color: #F5F5F5;
+    border-radius: 10px;
+}
+
+img {
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+
+.left-div {
+    width: 800px;
+    height: 600px;
+    margin-right: 20px;
+}
+
+.right-div {
+    width: 400px;
+    height: 700px;
+}
+
+.last-div {
+    margin: auto;
+}
+
+.comment-btn {
+    background-color: #872AE0;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 8px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-family: 'Jua', sans-serif;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    float: right;
+}
